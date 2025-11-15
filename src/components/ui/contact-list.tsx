@@ -6,13 +6,17 @@ import { ContactCard } from "./contact-card";
 
 export default function ContactList() {
   return (
-    <div>
-      <h2>Contact List</h2>
+    <ul className="list-unstyled d-flex flex-column gap-3 flex-grow-1">
       <ContactCard
         firstName="Ivan"
         lastName="Petrov"
         email="ivan.petrov@example.com"
       />
-    </div>
+      <ContactCard
+        firstName="Ivan"
+        lastName="Petrov"
+        email="ivan.petrov@example.com"
+      />
+    </ul>
   );
 }
