@@ -10,8 +10,12 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@dicebear/collection": "^9.2.4",
+    "@dicebear/core": "^9.2.4",
+    "bootstrap": "^5.3.8",
     "next": "16.0.3",
     "react": "19.2.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
