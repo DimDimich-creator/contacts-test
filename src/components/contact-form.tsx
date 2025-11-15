@@ -1,89 +1,109 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, Button, Container } from "react-bootstrap";
-import { addContact } from "@/utils/storage";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 
-const contactSchema = z.object({
-  firstName: z.string().min(1, "Введите имя"),
-  lastName: z.string().min(1, "Введите фамилию"),
-  email: z.string().email("Введите корректный email"),
-  phone: z.string().min(5, "Введите корректный телефон"),
+import { useContacts } from "@/components/contacts-store";
+import z from "zod";
+
+export enum ContactType {
+  PHONE = "phone",
+  EMAIL = "email",
+}
+
+export const ContactSchema = z.object({
+  id: z.string().uuid().optional(),
+  type: z.nativeEnum(ContactType, { message: "Выберите тип контакта" }),
+  value: z
+    .string()
+    .min(3, "Слишком короткое значение")
+    .max(100, "Слишком длинное значение"),
+  description: z.string().optional(),
 });
 
-type ContactFormData = z.infer<typeof contactSchema>;
+export type ContactFormData = z.infer<typeof ContactSchema>;
 
-export default function ContactForm() {
+export default function ContactForm({
+  onSuccess,
+}: {
+  onSuccess?: () => void; // удобно для закрытия модалки
+}) {
+  const { addContact } = useContacts();
+
+  const [showAlert, setShowAlert] = useState(false);
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema),
+    resolver: zodResolver(ContactSchema.omit({ id: true })),
   });
 
   const onSubmit = (data: ContactFormData) => {
-    addContact(data); // сохраняем контакт
-    reset(); // очищаем форму после сохранения
+    addContact(data);
+
+    setShowAlert(true);
+
+    setTimeout(() => {
+      setShowAlert(false);
+      reset();
+      onSuccess?.(); // закрыть модалку/оффканвас
+    }, 1500);
   };
 
   return (
-    <Container style={{ maxWidth: "500px", marginTop: "2rem" }}>
+    <Container style={{ maxWidth: 500 }}>
       <h3>Создать контакт</h3>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+
+      {showAlert && (
+        <Alert variant="success" className="mt-3">
+          Контакт создан
+        </Alert>
+      )}
+
+      <Form onSubmit={handleSubmit(onSubmit)} className="mt-3">
+        {/* Тип */}
         <Form.Group className="mb-3">
-          <Form.Label>Имя</Form.Label>
+          <Form.Label>Тип</Form.Label>
+          <Form.Select {...register("type")} isInvalid={!!errors.type}>
+            <option value="">Выберите тип</option>
+            <option value={ContactType.PHONE}>Телефон</option>
+            <option value={ContactType.EMAIL}>Email</option>
+          </Form.Select>
+          <Form.Control.Feedback type="invalid">
+            {errors.type?.message as string}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        {/* Значение */}
+        <Form.Group className="mb-3">
+          <Form.Label>Значение</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Введите имя"
-            {...register("firstName")}
-            isInvalid={!!errors.firstName}
+            placeholder="Введите значение"
+            {...register("value")}
+            isInvalid={!!errors.value}
           />
           <Form.Control.Feedback type="invalid">
-            {errors.firstName?.message}
+            {errors.value?.message}
           </Form.Control.Feedback>
         </Form.Group>
 
+        {/* Описание */}
         <Form.Group className="mb-3">
-          <Form.Label>Фамилия</Form.Label>
+          <Form.Label>Описание</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Введите фамилию"
-            {...register("lastName")}
-            isInvalid={!!errors.lastName}
+            placeholder="Введите описание"
+            {...register("description")}
+            isInvalid={!!errors.description}
           />
           <Form.Control.Feedback type="invalid">
-            {errors.lastName?.message}
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Введите email"
-            {...register("email")}
-            isInvalid={!!errors.email}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.email?.message}
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Телефон</Form.Label>
-          <Form.Control
-            type="tel"
-            placeholder="Введите телефон"
-            {...register("phone")}
-            isInvalid={!!errors.phone}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.phone?.message}
+            {errors.description?.message}
           </Form.Control.Feedback>
         </Form.Group>
 

@@ -1,23 +1,25 @@
-import React from "react";
+"use client";
+
+import { useContacts } from "@/components/contacts-store";
 import { ContactCard } from "./contact-card";
-import { Contact } from "./storage";
 
-interface ContactListProps {
-  contacts: Contact[];
-}
+export default function ContactList() {
+  const { state } = useContacts();
+  const { contactList } = state;
 
-export default function ContactList({ contacts }: ContactListProps) {
-  if (contacts.length === 0) return <p>Нет контактов</p>;
+  if (contactList.length === 0) {
+    return <p>Нет контактов</p>;
+  }
 
   return (
     <ul className="list-unstyled d-flex flex-column gap-3 flex-grow-1">
-      {contacts.map((contact, index) => (
+      {contactList.map((contact) => (
         <ContactCard
-          key={index}
-          firstName={contact.firstName}
-          lastName={contact.lastName}
-          email={contact.email}
-          phone={contact.phone}
+          key={contact.id}
+          type={contact.type}
+          value={contact.value}
+          description={contact.description || ""}
+          id={contact.id}
         />
       ))}
     </ul>

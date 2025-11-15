@@ -1,28 +1,32 @@
-import { Card, Image, Form, Button } from "react-bootstrap";
+"use client";
+
+import { Card, Image, Form } from "react-bootstrap";
 
 import { lorelei } from "@dicebear/collection";
 import { createAvatar } from "@dicebear/core";
+import { Contact, useContacts } from "@/components/contacts-store";
+import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-interface ContactDetailsPanelProps {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  notes?: string;
-  onNotesChange?: (value: string) => void;
-}
+export function ContactDetailsPanel() {
+  const { state, updateContact } = useContacts();
+  const searchParams = useSearchParams();
+  const contactId = searchParams.get("contactId");
+  const { contactList } = state;
 
-export function ContactDetailsPanel({
-  firstName,
-  lastName,
-  email,
-  phone = "",
-  notes = "",
-  onNotesChange,
-}: ContactDetailsPanelProps) {
-  const avatar = createAvatar(lorelei, {
-    seed: email,
-  });
+  // Находим контакт с нужным id
+  const contact = contactList.find((c) => c.id === contactId);
+
+  if (!contact) {
+    return <p>Контакт не найден</p>;
+  }
+
+  const { type, value, description } = contact;
+  const avatar = createAvatar(lorelei, { seed: contact.id });
+
+  const handleDescriptionChange = (newDescription: string) => {
+    updateContact({ ...contact, description: newDescription });
+  };
 
   return (
     <Card
@@ -32,19 +36,15 @@ export function ContactDetailsPanel({
       <div className="d-flex flex-column align-items-center gap-3">
         <Image
           src={avatar.toDataUri()}
-          alt={`${firstName} ${lastName}`}
+          alt={value}
           roundedCircle
           width={120}
           height={120}
         />
 
-        <h3 className="fw-semibold mb-0">
-          {firstName} {lastName}
-        </h3>
-
-        <div className="text-muted">{email}</div>
-
-        {phone && <div className="text-muted">📞 {phone}</div>}
+        <h3 className="fw-semibold mb-0">{type}</h3>
+        <div className="text-muted">{value}</div>
+        {description && <div className="text-muted">{description}</div>}
 
         <hr className="w-100" />
 
@@ -54,8 +54,8 @@ export function ContactDetailsPanel({
             as="textarea"
             rows={5}
             placeholder="Оставьте заметку…"
-            value={notes}
-            onChange={(e) => onNotesChange?.(e.target.value)}
+            onChange={(e) => handleDescriptionChange(e.target.value)}
+            value={description || ""}
           />
         </div>
       </div>
