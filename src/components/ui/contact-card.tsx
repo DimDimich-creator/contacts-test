@@ -6,15 +6,18 @@ interface ContactCardProps {
   firstName: string;
   lastName: string;
   email: string;
-  avatarUrl: string;
 }
 
 export function ContactCard({ firstName, lastName, email }: ContactCardProps) {
   const avatar = createAvatar(lorelei, {
     seed: email,
   });
+  
   return (
-    <Card className="d-flex flex-row align-items-center p-2 gap-3 shadow-sm">
+    <Card
+      className="d-flex flex-row align-items-center p-2 gap-3 shadow-sm"
+      as={"li"}
+    >
       <Image
         src={avatar.toDataUri()}
         alt={`${firstName} ${lastName}`}
