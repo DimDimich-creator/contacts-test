@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import ContactForm from "./contact-form";
 
-export default function ContactModal(props) {
+export default function ContactModal(props: any) {
   return (
     <Modal
       {...props}

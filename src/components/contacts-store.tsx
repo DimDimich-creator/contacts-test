@@ -2,9 +2,7 @@
 
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { nanoid } from "nanoid";
-
-// Тип контакта
-export type ContactType = "email" | "phone" | "telegram" | "other";
+import { ContactType } from "./contact-form";
 
 // Модель контакта
 export interface Contact {
@@ -22,7 +20,7 @@ interface State {
 
 // Action
 type Action =
-  | { type: "add"; payload: Omit<Contact, "id"> }
+  | { type: "add"; payload: Omit<Contact, "id" | "createdAt"> } // исключаем createdAt
   | { type: "update"; payload: Contact }
   | { type: "remove"; payload: { id: string } }
   | { type: "set"; payload: Contact[] };

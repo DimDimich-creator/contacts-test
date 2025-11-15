@@ -5,11 +5,11 @@ import { Card, Image, Button, Modal } from "react-bootstrap";
 import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
 import { useSearchParams, useRouter } from "next/navigation";
-import ContactForm, { ContactFormData } from "./contact-form";
+import ContactForm, { ContactFormData, ContactType } from "./contact-form";
 import { useContacts } from "@/components/contacts-store";
 
 interface ContactCardProps {
-  type: string;
+  type: ContactType;
   value: string;
   description?: string;
   id: string;
@@ -24,8 +24,8 @@ export function ContactCard({
   const avatar = createAvatar(lorelei, { seed: id });
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { removeContact, updateContact } = useContacts();
-
+  const { state, removeContact, updateContact } = useContacts();
+  const { contactList } = state;
   const [showModal, setShowModal] = useState(false);
 
   const handleClick = () => {
@@ -39,7 +39,11 @@ export function ContactCard({
   };
 
   const handleEdit = (data: ContactFormData) => {
-    updateContact({ id, ...data });
+    // ищем существующий контакт в состоянии
+    const existing = contactList.find((c) => c.id === id);
+    if (!existing) return;
+
+    updateContact({ ...existing, ...data }); // сохраняем createdAt и остальные поля
     setShowModal(false);
   };
 

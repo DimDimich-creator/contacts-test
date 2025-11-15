@@ -34,7 +34,7 @@ export default function ContactForm({
   onSuccess,
   defaultValues,
 }: ContactFormProps) {
-  const { addContact, updateContact } = useContacts();
+  const { addContact, updateContact, state } = useContacts();
   const [showAlert, setShowAlert] = useState(false);
 
   const {
@@ -53,12 +53,17 @@ export default function ContactForm({
   }, [defaultValues, reset]);
 
   const onSubmit = (data: ContactFormData) => {
+    const { contactList } = state;
+
     if (defaultValues?.id) {
       // редактируем существующий контакт
-      updateContact({ id: defaultValues.id, ...data });
+      const existing = contactList.find((c) => c.id === defaultValues.id);
+      if (!existing) return;
+
+      updateContact({ ...existing, ...data }); // сохраняем createdAt
     } else {
-      // создаем новый
-      addContact(data);
+      // создаем новый контакт, id будет создан внутри стора
+      addContact({ ...data, createdAt: Date.now() });
     }
 
     setShowAlert(true);
