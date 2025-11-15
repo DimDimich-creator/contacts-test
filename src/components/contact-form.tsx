@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, Button, Container, Alert } from "react-bootstrap";
@@ -25,13 +25,16 @@ export const ContactSchema = z.object({
 
 export type ContactFormData = z.infer<typeof ContactSchema>;
 
+interface ContactFormProps {
+  onSuccess?: () => void;
+  defaultValues?: Partial<ContactFormData>; // сюда передаем контакт для редактирования
+}
+
 export default function ContactForm({
   onSuccess,
-}: {
-  onSuccess?: () => void; // удобно для закрытия модалки
-}) {
-  const { addContact } = useContacts();
-
+  defaultValues,
+}: ContactFormProps) {
+  const { addContact, updateContact } = useContacts();
   const [showAlert, setShowAlert] = useState(false);
 
   const {
@@ -41,27 +44,39 @@ export default function ContactForm({
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(ContactSchema.omit({ id: true })),
+    defaultValues: defaultValues || {}, // устанавливаем defaultValues
   });
 
+  // Если defaultValues пришли позже (например, при открытии модалки), обновляем форму
+  useEffect(() => {
+    if (defaultValues) reset(defaultValues);
+  }, [defaultValues, reset]);
+
   const onSubmit = (data: ContactFormData) => {
-    addContact(data);
+    if (defaultValues?.id) {
+      // редактируем существующий контакт
+      updateContact({ id: defaultValues.id, ...data });
+    } else {
+      // создаем новый
+      addContact(data);
+    }
 
     setShowAlert(true);
 
     setTimeout(() => {
       setShowAlert(false);
       reset();
-      onSuccess?.(); // закрыть модалку/оффканвас
+      onSuccess?.();
     }, 1500);
   };
 
   return (
     <Container style={{ maxWidth: 500 }}>
-      <h3>Создать контакт</h3>
+      <h3>{defaultValues?.id ? "Редактировать контакт" : "Создать контакт"}</h3>
 
       {showAlert && (
         <Alert variant="success" className="mt-3">
-          Контакт создан
+          Контакт {defaultValues?.id ? "обновлен" : "создан"}
         </Alert>
       )}
 

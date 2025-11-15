@@ -1,61 +1,97 @@
-'use client";';
-import { Card, Image } from "react-bootstrap";
+"use client";
+
+import { useState } from "react";
+import { Card, Image, Button, Modal } from "react-bootstrap";
 import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useSearchParams, useRouter } from "next/navigation";
+import ContactForm, { ContactFormData } from "./contact-form";
+import { useContacts } from "@/components/contacts-store";
 
 interface ContactCardProps {
   type: string;
   value: string;
-  description: string;
+  description?: string;
   id: string;
 }
 
 export function ContactCard({
   type,
   value,
-  description,
+  description = "",
   id,
 }: ContactCardProps) {
-  const avatar = createAvatar(lorelei, {
-    seed: id,
-  });
-
+  const avatar = createAvatar(lorelei, { seed: id });
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { removeContact, updateContact } = useContacts();
+
+  const [showModal, setShowModal] = useState(false);
 
   const handleClick = () => {
-    // клонируем текущие query параметры
     const params = new URLSearchParams(searchParams.toString());
     params.set("contactId", id);
-
-    // обновляем URL (Page Router)
     router.push(`?${params.toString()}`);
   };
 
-  return (
-    <Card
-      className="d-flex flex-row align-items-center p-2 gap-3 shadow-sm"
-      as={"li"}
-      onClick={handleClick}
-      style={{ cursor: "pointer" }}
-    >
-      <Image
-        src={avatar.toDataUri()}
-        alt={`${type} ${value}`}
-        roundedCircle
-        width={64}
-        height={64}
-      />
+  const handleDelete = () => {
+    removeContact(id);
+  };
 
-      <div className="d-flex flex-column">
-        <div className="fw-semibold fs-5">
-          {type} {value}
+  const handleEdit = (data: ContactFormData) => {
+    updateContact({ id, ...data });
+    setShowModal(false);
+  };
+
+  return (
+    <>
+      <Card
+        className="d-flex flex-row align-items-center p-2 gap-3 shadow-sm"
+        as="li"
+        style={{ cursor: "pointer" }}
+      >
+        <Image
+          src={avatar.toDataUri()}
+          alt={`${type} ${value}`}
+          roundedCircle
+          width={64}
+          height={64}
+          onClick={handleClick}
+        />
+
+        <div className="d-flex flex-column flex-grow-1" onClick={handleClick}>
+          <div className="fw-semibold fs-5">
+            {type} {value}
+          </div>
+          <div className="text-muted">{description}</div>
         </div>
 
-        <div className="text-muted">{description}</div>
-      </div>
-    </Card>
+        <div className="d-flex gap-2">
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => setShowModal(true)}
+          >
+            Редактировать
+          </Button>
+          <Button variant="outline-danger" size="sm" onClick={handleDelete}>
+            Удалить
+          </Button>
+        </div>
+      </Card>
+
+      {/* Модалка редактирования */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Редактировать контакт</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ContactForm
+            onSuccess={() => setShowModal(false)}
+            defaultValues={{ type, value, description }}
+          />
+        </Modal.Body>
+      </Modal>
+    </>
   );
 }

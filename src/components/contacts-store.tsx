@@ -12,6 +12,7 @@ export interface Contact {
   type: ContactType;
   value: string;
   description?: string;
+  createdAt: number;
 }
 
 // State
@@ -41,7 +42,11 @@ function initState(): State {
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "add": {
-      const newContact: Contact = { id: nanoid(), ...action.payload };
+      const newContact: Contact = {
+        id: nanoid(),
+        createdAt: Date.now(),
+        ...action.payload,
+      };
       return { contactList: [newContact, ...state.contactList] };
     }
     case "update": {
