@@ -18,7 +18,15 @@ export function ContactDetailsPanel() {
   const contact = contactList.find((c) => c.id === contactId);
 
   if (!contact) {
-    return <p>Контакт не найден</p>;
+    return (
+      <Card
+        className="p-4 shadow-sm flex-shrink-0 d-flex align-items-center justify-content-center"
+        style={{ width: "350px", height: "500px" }}
+      >
+        <h3 className="">Contact not selected</h3>
+        <p className="">Select a contact from the left list</p>
+      </Card>
+    );
   }
 
   const { type, value, description } = contact;

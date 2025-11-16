@@ -4,17 +4,19 @@ import { Card } from "react-bootstrap";
 export default function EmptyState() {
   return (
     <Card
-      className="p-4 shadow-sm h-100 flex-shrink-0"
-      style={{ width: "350px", minHeight: "400px" }}
+      className="d-flex flex-col align-items-center p-2 gap-3 shadow-sm"
+      as="li"
+      // style={{ cursor: "pointer" }}
     >
-      <div className="d-flex flex-column align-items-center gap-3">
-        <h3 className="fw-semibold mb-0">Нет контактов</h3>
+      <h4 className="fw-semibold mb-0">Нет контактов</h4>
 
-        <div className="text-muted text-center">
-          Похоже, у вас еще нет контактов. Начните с добавления нового контакта,
-          чтобы управлять своей адресной книгой.
-        </div>
-      </div>
+      <p className="text-muted text-center">
+        Похоже, у вас еще нет контактов. Начните с добавления нового контакта,
+        чтобы управлять своей адресной книгой.
+      </p>
     </Card>
   );
 }
+
+
+

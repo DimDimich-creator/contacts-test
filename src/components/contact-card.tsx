@@ -92,7 +92,7 @@ export function ContactCard({
         <Modal.Body>
           <ContactForm
             onSuccess={() => setShowModal(false)}
-            defaultValues={{ type, value, description }}
+            defaultValues={{ type, value, description, id }}
           />
         </Modal.Body>
       </Modal>
