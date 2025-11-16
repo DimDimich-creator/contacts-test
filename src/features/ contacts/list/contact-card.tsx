@@ -6,12 +6,10 @@ import { Mail, Phone } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button, Card, Image } from "react-bootstrap";
-import {
-  type Contact,
-  useContacts,
-} from "@/features/ contacts/store/contacts-store";
+
 import { ContactType } from "../form/schema";
 import ContactModal from "../modal/contact-modal";
+import { type Contact, useContacts } from "../store";
 
 interface ContactCardProps {
   contact: Contact;

@@ -5,8 +5,8 @@ import { createAvatar } from "@dicebear/core";
 import { Mail, Phone } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card, Form, Image } from "react-bootstrap";
-import { useContacts } from "@/features/ contacts/store/contacts-store";
 import { ContactType } from "../form/schema";
+import { useContacts } from "../store";
 
 export function ContactDetailsPanel() {
   const { state, updateContact } = useContacts();

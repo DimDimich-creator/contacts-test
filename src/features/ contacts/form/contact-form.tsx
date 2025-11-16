@@ -1,13 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type z from "zod";
-import { useContacts } from "@/features/ contacts/store/contacts-store";
 import { ContactSchema, ContactType } from "./schema";
+import { useContacts } from "../store";
 
 export type ContactFormData = z.infer<typeof ContactSchema>;
 
