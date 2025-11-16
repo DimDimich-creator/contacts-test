@@ -6,6 +6,7 @@ import { ContactCard } from "./contact-card";
 import { ContactFilter } from "./contact-filter";
 import { ContactSort } from "./contact-sort";
 import { ContactType } from "@/components/contact-form";
+import { Contact } from "@/components/contacts-store";
 import EmptyState from "./empty-state";
 
 export default function ContactList() {
@@ -47,13 +48,7 @@ export default function ContactList() {
       ) : (
         <ul className="list-unstyled d-flex flex-column gap-3 flex-grow-1">
           {filteredContacts.map((contact) => (
-            <ContactCard
-              key={contact.id}
-              type={contact.type}
-              value={contact.value}
-              description={contact.description || ""}
-              id={contact.id}
-            />
+            <ContactCard key={contact.id} contact={contact} />
           ))}
         </ul>
       )}

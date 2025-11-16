@@ -6,23 +6,16 @@ import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
 import { useSearchParams, useRouter } from "next/navigation";
 import ContactForm, { ContactFormData, ContactType } from "./contact-form";
-import { useContacts } from "@/components/contacts-store";
+import { Contact, useContacts } from "@/components/contacts-store";
 import ContactModal from "./contact-modal";
 import { Mail, Phone } from "lucide-react";
 
 interface ContactCardProps {
-  type: ContactType;
-  value: string;
-  description?: string;
-  id: string;
+  contact: Contact;
 }
 
-export function ContactCard({
-  type,
-  value,
-  description = "",
-  id,
-}: ContactCardProps) {
+export function ContactCard({ contact }: ContactCardProps) {
+  const { id, type, value, description } = contact;
   const avatar = createAvatar(lorelei, { seed: id });
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -103,7 +96,7 @@ export function ContactCard({
         show={showModal}
         onHide={() => setShowModal(false)}
         mode="edit"
-        defaultValues={{ id, type, value, description }}
+        defaultValues={contact}
       />
     </>
   );

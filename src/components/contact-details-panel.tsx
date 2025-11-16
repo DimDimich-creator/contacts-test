@@ -23,7 +23,7 @@ export function ContactDetailsPanel() {
     return (
       <Card
         className="p-4 shadow-sm flex-shrink-0 d-md-flex align-items-center justify-content-center d-none"
-        style={{ width: "350px", height: "500px" }}
+        style={{ width: "450px", height: "500px" }}
       >
         <h3 className="">Contact not selected</h3>
         <p className="">Select a contact from the left list</p>

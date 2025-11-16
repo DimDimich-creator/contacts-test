@@ -17,9 +17,9 @@ export default function ContactsLayout() {
         <Button
           variant="outline-primary"
           onClick={() => setShowModal(true)}
-          className="w-100 mb-3 d-flex gap-2 "
+          className="w-100 mb-3 d-flex gap-2 align-items-center justify-content-center "
         >
-          Create Contact
+          Create contact
           <Plus />
         </Button>
 
