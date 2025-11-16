@@ -86,7 +86,20 @@ export default function ContactForm({
           <Form.Label className="w-100">
             Value
             <Form.Control
-              type="text"
+              type={
+                type === ContactType.EMAIL
+                  ? "email"
+                  : type === ContactType.PHONE
+                    ? "phone"
+                    : ""
+              }
+              autoComplete={
+                type === ContactType.EMAIL
+                  ? "email"
+                  : type === ContactType.PHONE
+                    ? "phone"
+                    : ""
+              }
               placeholder={
                 type === ContactType.EMAIL
                   ? "example@mail.com"
