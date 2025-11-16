@@ -7,13 +7,14 @@ import ContactModal from "../contact-modal";
 import { ContactsProvider } from "../contacts-store";
 import { Toaster } from "sonner";
 import { Plus } from "lucide-react";
+import { ModeToggleBootstrap } from "../mode-toggle";
 
 export default function ContactsLayout() {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <ContactsProvider>
-      <div className="container mt-5">
+      <main className="container mt-5 flex-grow-1">
         <Button
           variant="outline-primary"
           onClick={() => setShowModal(true)}
@@ -32,7 +33,7 @@ export default function ContactsLayout() {
           defaultValues={{}}
         />
         <Toaster position="top-center" richColors />
-      </div>
+      </main>
     </ContactsProvider>
   );
 }
