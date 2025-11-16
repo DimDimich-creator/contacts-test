@@ -5,10 +5,10 @@ import { Card, Image, Button } from "react-bootstrap";
 import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
 import { useSearchParams, useRouter } from "next/navigation";
-import ContactForm, { ContactFormData, ContactType } from "./contact-form";
 import { Contact, useContacts } from "@/components/contacts-store";
 import ContactModal from "./contact-modal";
 import { Mail, Phone } from "lucide-react";
+import { ContactType } from "./contact-form/schema";
 
 interface ContactCardProps {
   contact: Contact;

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ContactType } from "@/components/contact-form";
 import { Form } from "react-bootstrap";
+import { ContactType } from "./contact-form/schema";
 
 interface ContactFilterProps {
   onFilterChange: (filterText: string, filterType: ContactType | "") => void;

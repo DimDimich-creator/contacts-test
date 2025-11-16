@@ -7,35 +7,13 @@ import { Form, Button, Container } from "react-bootstrap";
 import { useContacts } from "@/components/contacts-store";
 import z from "zod";
 import { toast } from "sonner";
-
-export enum ContactType {
-  PHONE = "phone",
-  EMAIL = "email",
-}
-
-export const ContactSchema = z.discriminatedUnion("type", [
-  z.object({
-    id: z.string().optional(),
-    createdAt: z.number().optional(),
-    type: z.literal(ContactType.EMAIL),
-    value: z.email(),
-    description: z.string().optional(),
-  }),
-
-  z.object({
-    id: z.string().optional(),
-    createdAt: z.number().optional(),
-    type: z.literal(ContactType.PHONE),
-    value: z.e164(),
-    description: z.string().optional(),
-  }),
-]);
+import { ContactSchema, ContactType } from "./schema";
 
 export type ContactFormData = z.infer<typeof ContactSchema>;
 
 interface ContactFormProps {
   onSuccess?: () => void;
-  defaultValues?: Partial<ContactFormData>; // передаем контакт для редактирования
+  defaultValues?: Partial<ContactFormData>;
 }
 
 export default function ContactForm({
@@ -55,7 +33,6 @@ export default function ContactForm({
     defaultValues,
   });
 
-  // Обновление формы, если defaultValues меняются
   useEffect(() => {
     if (defaultValues) reset(defaultValues);
   }, [defaultValues, reset]);
@@ -64,8 +41,6 @@ export default function ContactForm({
 
   const onSubmit = (data: ContactFormData) => {
     const { contactList } = state;
-
-    // если есть id → это редактирование
     if (data.id) {
       const existing = contactList.find((c) => c.id === data.id);
       if (!existing) return;
@@ -73,12 +48,11 @@ export default function ContactForm({
       updateContact({
         ...existing,
         ...data,
-        createdAt: existing.createdAt, // сохраняем дату создания
+        createdAt: existing.createdAt,
       });
 
       toast.success("Contact updated!");
     } else {
-      // создание нового
       addContact({
         ...data,
         createdAt: Date.now(),
@@ -95,7 +69,6 @@ export default function ContactForm({
   return (
     <Container style={{ maxWidth: 500 }}>
       <Form onSubmit={handleSubmit(onSubmit)} className="mt-3 mb-5">
-        {/* Тип */}
         <Form.Group className="mb-3">
           <Form.Label className="w-100">
             Type
@@ -109,8 +82,6 @@ export default function ContactForm({
             {errors.type?.message as string}
           </Form.Control.Feedback>
         </Form.Group>
-
-        {/* Значение */}
         <Form.Group className="mb-3">
           <Form.Label className="w-100">
             Value
@@ -132,7 +103,6 @@ export default function ContactForm({
           </Form.Control.Feedback>
         </Form.Group>
 
-        {/* Описание */}
         <Form.Group className="mb-3">
           <Form.Label className="w-100">
             Description
@@ -147,8 +117,6 @@ export default function ContactForm({
             {errors.description?.message}
           </Form.Control.Feedback>
         </Form.Group>
-
-        {/* Кнопка */}
         <Button variant="primary" type="submit" className="w-100">
           Save
         </Button>
