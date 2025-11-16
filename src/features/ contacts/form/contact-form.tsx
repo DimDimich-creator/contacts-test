@@ -6,8 +6,8 @@ import { Button, Container, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type z from "zod";
-import { ContactSchema, ContactType } from "./schema";
 import { useContacts } from "../store";
+import { ContactSchema, ContactType } from "./schema";
 
 export type ContactFormData = z.infer<typeof ContactSchema>;
 

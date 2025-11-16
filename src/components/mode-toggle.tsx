@@ -10,8 +10,6 @@ export function ModeToggleBootstrap() {
 
   useEffect(() => {
     setMounted(true);
-
-    // читаем текущую тему из HTML
     const current = document.documentElement.getAttribute("data-bs-theme") as
       | "light"
       | "dark"

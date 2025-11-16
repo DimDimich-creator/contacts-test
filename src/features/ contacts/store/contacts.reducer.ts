@@ -1,7 +1,6 @@
 import { nanoid } from "nanoid";
 import type { Action, State } from "./types";
 
-// Инициализация состояния
 export function initState(): State {
   if (typeof window !== "undefined") {
     try {
