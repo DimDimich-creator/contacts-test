@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Image, Button, Modal } from "react-bootstrap";
+import { Card, Image, Button } from "react-bootstrap";
 import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
 import { useSearchParams, useRouter } from "next/navigation";
 import ContactForm, { ContactFormData, ContactType } from "./contact-form";
 import { useContacts } from "@/components/contacts-store";
 import ContactModal from "./contact-modal";
+import { Mail, Phone } from "lucide-react";
 
 interface ContactCardProps {
   type: ContactType;
@@ -40,11 +41,9 @@ export function ContactCard({
   };
 
   const handleEdit = (data: ContactFormData) => {
-    // ищем существующий контакт в состоянии
     const existing = contactList.find((c) => c.id === id);
     if (!existing) return;
-
-    updateContact({ ...existing, ...data }); // сохраняем createdAt и остальные поля
+    updateContact({ ...existing, ...data });
     setShowModal(false);
   };
 
@@ -54,6 +53,7 @@ export function ContactCard({
         className="d-flex flex-row align-items-center p-2 gap-3 shadow-sm"
         as="li"
         style={{ cursor: "pointer" }}
+        onClick={handleClick}
       >
         <Image
           src={avatar.toDataUri()}
@@ -61,26 +61,40 @@ export function ContactCard({
           roundedCircle
           width={64}
           height={64}
-          onClick={handleClick}
         />
 
-        <div className="d-flex flex-column flex-grow-1" onClick={handleClick}>
-          <div className="fw-semibold fs-5">
-            {type} {value}
+        <div className="d-flex flex-column flex-grow-1">
+          <div className="d-flex gap-2">
+            {type === ContactType.PHONE ? <Phone /> : <Mail />}
+            <div className="fw-semibold fs-6 fs-md-5 text-clamp-1">{value}</div>
           </div>
-          <div className="text-muted">{description}</div>
+          {/* {description && (
+            <p className="text-muted fs-7 fs-md-6 text-clamp-1 m-0">
+              {description}
+            </p>
+          )} */}
         </div>
 
-        <div className="d-flex gap-2">
+        <div className="d-flex flex-column flex-md-row gap-2">
           <Button
             variant="outline-primary"
             size="sm"
-            onClick={() => setShowModal(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowModal(true);
+            }}
           >
-            Редактировать
+            Edit
           </Button>
-          <Button variant="outline-danger" size="sm" onClick={handleDelete}>
-            Удалить
+          <Button
+            variant="outline-danger"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+          >
+            Delete
           </Button>
         </div>
       </Card>

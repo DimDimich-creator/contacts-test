@@ -7,6 +7,8 @@ import { createAvatar } from "@dicebear/core";
 import { Contact, useContacts } from "@/components/contacts-store";
 import { useParams } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { ContactType } from "./contact-form";
+import { Mail, Phone } from "lucide-react";
 
 export function ContactDetailsPanel() {
   const { state, updateContact } = useContacts();
@@ -20,7 +22,7 @@ export function ContactDetailsPanel() {
   if (!contact) {
     return (
       <Card
-        className="p-4 shadow-sm flex-shrink-0 d-flex align-items-center justify-content-center"
+        className="p-4 shadow-sm flex-shrink-0 d-md-flex align-items-center justify-content-center d-none flex-grow-1"
         style={{ width: "350px", height: "500px" }}
       >
         <h3 className="">Contact not selected</h3>
@@ -38,7 +40,7 @@ export function ContactDetailsPanel() {
 
   return (
     <Card
-      className="p-4 shadow-sm h-100 flex-shrink-0"
+      className="p-4 shadow-sm h-100 flex-shrink-0 flex-grow-1"
       style={{ width: "350px" }}
     >
       <div className="d-flex flex-column align-items-center gap-3">
@@ -49,9 +51,10 @@ export function ContactDetailsPanel() {
           width={120}
           height={120}
         />
-
-        <h3 className="fw-semibold mb-0">{type}</h3>
-        <div className="text-muted">{value}</div>
+        <div className="text-muted d-flex gap-3 align-items-center justify-content-center">
+          {type === ContactType.PHONE ? <Phone /> : <Mail />}
+          <p className="m-0">{value}</p>
+        </div>
         {description && <div className="text-muted">{description}</div>}
 
         <hr className="w-100" />

@@ -16,14 +16,14 @@ export enum ContactType {
 
 export const ContactSchema = z.discriminatedUnion("type", [
   z.object({
-    id: z.uuid(),
+    id: z.uuid().optional(),
     type: z.literal(ContactType.EMAIL),
     value: z.email(),
     description: z.string().optional(),
   }),
 
   z.object({
-    id: z.uuid(),
+    id: z.uuid().optional(),
     type: z.literal(ContactType.PHONE),
     value: z.e164(),
     description: z.string().optional(),
@@ -86,12 +86,14 @@ export default function ContactForm({
       <Form onSubmit={handleSubmit(onSubmit)} className="mt-3 mb-5">
         {/* Тип */}
         <Form.Group className="mb-3">
-          <Form.Label>Тип</Form.Label>
-          <Form.Select {...register("type")} isInvalid={!!errors.type}>
-            <option value="">Select type of contact</option>
-            <option value={ContactType.PHONE}>Phone</option>
-            <option value={ContactType.EMAIL}>Email</option>
-          </Form.Select>
+          <Form.Label className="w-100">
+            Type
+            <Form.Select {...register("type")} isInvalid={!!errors.type}>
+              <option value="">Select type of contact</option>
+              <option value={ContactType.PHONE}>Phone</option>
+              <option value={ContactType.EMAIL}>Email</option>
+            </Form.Select>
+          </Form.Label>
           <Form.Control.Feedback type="invalid">
             {errors.type?.message as string}
           </Form.Control.Feedback>
@@ -99,19 +101,21 @@ export default function ContactForm({
 
         {/* Значение */}
         <Form.Group className="mb-3">
-          <Form.Label>Value</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder={
-              type === ContactType.EMAIL
-                ? "example@mail.com"
-                : type === ContactType.PHONE
-                  ? "+1234567890"
-                  : ""
-            }
-            {...register("value")}
-            isInvalid={!!errors.value}
-          />
+          <Form.Label className="w-100">
+            Value
+            <Form.Control
+              type="text"
+              placeholder={
+                type === ContactType.EMAIL
+                  ? "example@mail.com"
+                  : type === ContactType.PHONE
+                    ? "+1234567890"
+                    : ""
+              }
+              {...register("value")}
+              isInvalid={!!errors.value}
+            />
+          </Form.Label>
           <Form.Control.Feedback type="invalid">
             {errors.value?.message}
           </Form.Control.Feedback>
@@ -119,13 +123,15 @@ export default function ContactForm({
 
         {/* Описание */}
         <Form.Group className="mb-3">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            placeholder="Enter a description"
-            {...register("description")}
-            isInvalid={!!errors.description}
-          />
+          <Form.Label className="w-100">
+            Description
+            <Form.Control
+              as="textarea"
+              placeholder="Enter a description"
+              {...register("description")}
+              isInvalid={!!errors.description}
+            />
+          </Form.Label>
           <Form.Control.Feedback type="invalid">
             {errors.description?.message}
           </Form.Control.Feedback>

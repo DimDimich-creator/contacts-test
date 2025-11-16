@@ -6,15 +6,21 @@ import ContactsSplitView from "../contacts-split-view";
 import ContactModal from "../contact-modal";
 import { ContactsProvider } from "../contacts-store";
 import { Toaster } from "sonner";
+import { Plus } from "lucide-react";
 
 export default function ContactsLayout() {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <ContactsProvider>
-      <div>
-        <Button variant="primary" onClick={() => setShowModal(true)}>
+      <div className="container mt-5">
+        <Button
+          variant="outline-primary"
+          onClick={() => setShowModal(true)}
+          className="w-100 mb-3 d-flex gap-2 "
+        >
           Create Contact
+          <Plus />
         </Button>
 
         <ContactsSplitView />
