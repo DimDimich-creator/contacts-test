@@ -8,18 +8,23 @@ import { ContactsProvider } from "../contacts-store";
 import { Toaster } from "sonner";
 
 export default function ContactsLayout() {
-  const [modalShow, setModalShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <ContactsProvider>
       <div>
-        <Button variant="primary" onClick={() => setModalShow(true)}>
+        <Button variant="primary" onClick={() => setShowModal(true)}>
           Create Contact
         </Button>
 
         <ContactsSplitView />
 
-        <ContactModal show={modalShow} onHide={() => setModalShow(false)} />
+        <ContactModal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          mode="create"
+          defaultValues={{}}
+        />
         <Toaster position="top-center" richColors />
       </div>
     </ContactsProvider>

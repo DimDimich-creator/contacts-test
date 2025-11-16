@@ -1,26 +1,33 @@
+"use client";
+
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import ContactForm from "./contact-form";
+import { ContactFormData } from "./contact-form";
 
-export default function ContactModal(props: any) {
+interface ContactModalProps {
+  show: boolean;
+  onHide: () => void;
+  defaultValues?: Partial<ContactFormData>;
+  mode?: "create" | "edit";
+}
+
+export default function ContactModal({
+  show,
+  onHide,
+  defaultValues,
+  mode = "create",
+}: ContactModalProps) {
+  const title = mode === "edit" ? "Редактировать контакт" : "Создать контакт";
+
   return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
+    <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ContactForm onSuccess={props.onHide} />
+        <ContactForm onSuccess={onHide} defaultValues={defaultValues} />
       </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
     </Modal>
   );
 }

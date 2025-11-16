@@ -14,15 +14,21 @@ export enum ContactType {
   EMAIL = "email",
 }
 
-export const ContactSchema = z.object({
-  id: z.string().uuid().optional(),
-  type: z.nativeEnum(ContactType, { message: "Выберите тип контакта" }),
-  value: z
-    .string()
-    .min(3, "Слишком короткое значение")
-    .max(100, "Слишком длинное значение"),
-  description: z.string().optional(),
-});
+export const ContactSchema = z.discriminatedUnion("type", [
+  z.object({
+    id: z.uuid(),
+    type: z.literal(ContactType.EMAIL),
+    value: z.email(),
+    description: z.string().optional(),
+  }),
+
+  z.object({
+    id: z.uuid(),
+    type: z.literal(ContactType.PHONE),
+    value: z.e164(),
+    description: z.string().optional(),
+  }),
+]);
 
 export type ContactFormData = z.infer<typeof ContactSchema>;
 
@@ -41,10 +47,11 @@ export default function ContactForm({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<ContactFormData>({
-    resolver: zodResolver(ContactSchema.omit({ id: true })),
-    defaultValues: defaultValues || {}, // устанавливаем defaultValues
+    resolver: zodResolver(ContactSchema),
+    defaultValues,
   });
 
   // Если defaultValues пришли позже (например, при открытии модалки), обновляем форму
@@ -66,24 +73,23 @@ export default function ContactForm({
       addContact({ ...data, createdAt: Date.now() });
     }
 
-    toast.success(defaultValues?.id ? "Contact creat!" : "Contact update!" );
+    toast.success(defaultValues?.id ? "Contact creat!" : "Contact update!");
     setTimeout(() => {
       onSuccess?.();
     }, 1500);
-
   };
+
+  const type = watch("type");
 
   return (
     <Container style={{ maxWidth: 500 }}>
-      <h3>{defaultValues?.id ? "Редактировать контакт" : "Создать контакт"}</h3>
-
-      <Form onSubmit={handleSubmit(onSubmit)} className="mt-3">
+      <Form onSubmit={handleSubmit(onSubmit)} className="mt-3 mb-5">
         {/* Тип */}
         <Form.Group className="mb-3">
           <Form.Label>Тип</Form.Label>
           <Form.Select {...register("type")} isInvalid={!!errors.type}>
-            <option value="">Выберите тип</option>
-            <option value={ContactType.PHONE}>Телефон</option>
+            <option value="">Select type of contact</option>
+            <option value={ContactType.PHONE}>Phone</option>
             <option value={ContactType.EMAIL}>Email</option>
           </Form.Select>
           <Form.Control.Feedback type="invalid">
@@ -93,10 +99,16 @@ export default function ContactForm({
 
         {/* Значение */}
         <Form.Group className="mb-3">
-          <Form.Label>Значение</Form.Label>
+          <Form.Label>Value</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Введите значение"
+            placeholder={
+              type === ContactType.EMAIL
+                ? "example@mail.com"
+                : type === ContactType.PHONE
+                  ? "+1234567890"
+                  : ""
+            }
             {...register("value")}
             isInvalid={!!errors.value}
           />
@@ -107,10 +119,10 @@ export default function ContactForm({
 
         {/* Описание */}
         <Form.Group className="mb-3">
-          <Form.Label>Описание</Form.Label>
+          <Form.Label>Description</Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Введите описание"
+            as="textarea"
+            placeholder="Enter a description"
             {...register("description")}
             isInvalid={!!errors.description}
           />
@@ -119,8 +131,8 @@ export default function ContactForm({
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Button variant="primary" type="submit">
-          Сохранить
+        <Button variant="primary" type="submit" className="w-100">
+          Save
         </Button>
       </Form>
     </Container>

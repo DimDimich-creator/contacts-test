@@ -7,6 +7,7 @@ import { lorelei } from "@dicebear/collection";
 import { useSearchParams, useRouter } from "next/navigation";
 import ContactForm, { ContactFormData, ContactType } from "./contact-form";
 import { useContacts } from "@/components/contacts-store";
+import ContactModal from "./contact-modal";
 
 interface ContactCardProps {
   type: ContactType;
@@ -84,18 +85,12 @@ export function ContactCard({
         </div>
       </Card>
 
-      {/* Модалка редактирования */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Редактировать контакт</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <ContactForm
-            onSuccess={() => setShowModal(false)}
-            defaultValues={{ type, value, description, id }}
-          />
-        </Modal.Body>
-      </Modal>
+      <ContactModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        mode="edit"
+        defaultValues={{ id, type, value, description }}
+      />
     </>
   );
 }
