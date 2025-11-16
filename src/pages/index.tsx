@@ -1,8 +1,8 @@
-import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
-import ContactsLayout from "@/components/layout/contacts-layout";
-import Header from "@/components/header";
+import Head from "next/head";
 import Footer from "@/components/footer";
+import Header from "@/components/header";
+import ContactsLayout from "@/features/ contacts/components/contacts-layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

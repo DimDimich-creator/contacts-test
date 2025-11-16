@@ -2,8 +2,8 @@
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { ContactFormData } from "./contact-form/schema";
-import ContactForm from "./contact-form/contact-form";
+import ContactForm from "../form/contact-form";
+import type { ContactFormData } from "../form/schema";
 
 interface ContactModalProps {
   show: boolean;

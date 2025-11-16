@@ -1,14 +1,12 @@
 "use client";
 
-import { Card, Image, Form } from "react-bootstrap";
-
 import { lorelei } from "@dicebear/collection";
 import { createAvatar } from "@dicebear/core";
-import { Contact, useContacts } from "@/components/contacts-store";
-import { useParams } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 import { Mail, Phone } from "lucide-react";
-import { ContactType } from "./contact-form/schema";
+import { useSearchParams } from "next/navigation";
+import { Card, Form, Image } from "react-bootstrap";
+import { useContacts } from "@/features/ contacts/store/contacts-store";
+import { ContactType } from "../form/schema";
 
 export function ContactDetailsPanel() {
   const { state, updateContact } = useContacts();
@@ -16,7 +14,6 @@ export function ContactDetailsPanel() {
   const contactId = searchParams.get("contactId");
   const { contactList } = state;
 
-  // Находим контакт с нужным id
   const contact = contactList.find((c) => c.id === contactId);
 
   if (!contact) {

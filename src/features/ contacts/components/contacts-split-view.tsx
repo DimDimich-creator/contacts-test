@@ -1,6 +1,7 @@
 'use client";';
-import { ContactDetailsPanel } from "./contact-details-panel";
-import ContactList from "./contact-list";
+
+import { ContactDetailsPanel } from "../details/contact-details-panel";
+import ContactList from "../list/contact-list";
 
 export default function ContactsSplitView() {
   return (

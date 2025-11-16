@@ -1,26 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { Card, Image, Button } from "react-bootstrap";
-import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
-import { useSearchParams, useRouter } from "next/navigation";
-import { Contact, useContacts } from "@/components/contacts-store";
-import ContactModal from "./contact-modal";
+import { createAvatar } from "@dicebear/core";
 import { Mail, Phone } from "lucide-react";
-import { ContactType } from "./contact-form/schema";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { Button, Card, Image } from "react-bootstrap";
+import {
+  type Contact,
+  useContacts,
+} from "@/features/ contacts/store/contacts-store";
+import { ContactType } from "../form/schema";
+import ContactModal from "../modal/contact-modal";
 
 interface ContactCardProps {
   contact: Contact;
 }
 
 export function ContactCard({ contact }: ContactCardProps) {
-  const { id, type, value, description } = contact;
+  const { id, type, value } = contact;
   const avatar = createAvatar(lorelei, { seed: id });
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { state, removeContact, updateContact } = useContacts();
-  const { contactList } = state;
+  const { removeContact } = useContacts();
+
   const [showModal, setShowModal] = useState(false);
 
   const handleClick = () => {
@@ -31,13 +34,6 @@ export function ContactCard({ contact }: ContactCardProps) {
 
   const handleDelete = () => {
     removeContact(id);
-  };
-
-  const handleEdit = (data: ContactFormData) => {
-    const existing = contactList.find((c) => c.id === id);
-    if (!existing) return;
-    updateContact({ ...existing, ...data });
-    setShowModal(false);
   };
 
   return (

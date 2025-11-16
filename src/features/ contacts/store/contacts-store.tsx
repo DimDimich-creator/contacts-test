@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { nanoid } from "nanoid";
-import { ContactType } from "./contact-form";
+import type React from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import type { ContactType } from "../form";
 
 // Модель контакта
 export interface Contact {

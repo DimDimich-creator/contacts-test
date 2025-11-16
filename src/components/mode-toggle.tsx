@@ -1,8 +1,8 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import { Sun, Moon } from "lucide-react";
 
 export function ModeToggleBootstrap() {
   const [mounted, setMounted] = useState(false);

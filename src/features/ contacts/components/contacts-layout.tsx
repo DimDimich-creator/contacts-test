@@ -1,13 +1,12 @@
 "use client";
 
-import { Button } from "react-bootstrap";
-import { useState } from "react";
-import ContactsSplitView from "../contacts-split-view";
-import ContactModal from "../contact-modal";
-import { ContactsProvider } from "../contacts-store";
-import { Toaster } from "sonner";
 import { Plus } from "lucide-react";
-import { ModeToggleBootstrap } from "../mode-toggle";
+import { useState } from "react";
+import { Button } from "react-bootstrap";
+import { Toaster } from "sonner";
+import ContactModal from "@/features/ contacts/modal/contact-modal";
+import { ContactsProvider } from "@/features/ contacts/store/contacts-store";
+import ContactsSplitView from "./contacts-split-view";
 
 export default function ContactsLayout() {
   const [showModal, setShowModal] = useState(false);

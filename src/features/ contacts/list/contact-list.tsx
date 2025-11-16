@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useContacts } from "@/components/contacts-store";
+import type { ContactType } from "@/features/ contacts/form/schema";
+import { useContacts } from "@/features/ contacts/store/contacts-store";
 import { ContactCard } from "./contact-card";
+import EmptyState from "./contact-card-empty";
 import { ContactFilter } from "./contact-filter";
 import { ContactSort } from "./contact-sort";
-import { ContactType } from "@/components/contact-form";
-import { Contact } from "@/components/contacts-store";
-import EmptyState from "./empty-state";
 
 export default function ContactList() {
   const { state } = useContacts();
