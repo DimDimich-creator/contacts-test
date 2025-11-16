@@ -22,7 +22,7 @@ export function ContactDetailsPanel() {
   if (!contact) {
     return (
       <Card
-        className="p-4 shadow-sm flex-shrink-0 d-md-flex align-items-center justify-content-center d-none flex-grow-1"
+        className="p-4 shadow-sm flex-shrink-0 d-md-flex align-items-center justify-content-center d-none"
         style={{ width: "350px", height: "500px" }}
       >
         <h3 className="">Contact not selected</h3>
@@ -40,8 +40,8 @@ export function ContactDetailsPanel() {
 
   return (
     <Card
-      className="p-4 shadow-sm h-100 flex-shrink-0 flex-grow-1"
-      style={{ width: "350px" }}
+      className="p-4 shadow-sm h-100 flex-shrink-0 d-none d-lg-block"
+      style={{ width: "450px" }}
     >
       <div className="d-flex flex-column align-items-center gap-3">
         <Image
@@ -55,16 +55,15 @@ export function ContactDetailsPanel() {
           {type === ContactType.PHONE ? <Phone /> : <Mail />}
           <p className="m-0">{value}</p>
         </div>
-        {description && <div className="text-muted">{description}</div>}
 
         <hr className="w-100" />
 
         <div className="w-100">
-          <Form.Label className="fw-semibold">Заметка</Form.Label>
+          <Form.Label className="fw-semibold">Description</Form.Label>
           <Form.Control
             as="textarea"
             rows={5}
-            placeholder="Оставьте заметку…"
+            placeholder="Leave a note…"
             onChange={(e) => handleDescriptionChange(e.target.value)}
             value={description || ""}
           />

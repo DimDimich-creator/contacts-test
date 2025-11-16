@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, Button, Container, Alert } from "react-bootstrap";
-
+import { Form, Button, Container } from "react-bootstrap";
 import { useContacts } from "@/components/contacts-store";
 import z from "zod";
 import { toast } from "sonner";
@@ -17,6 +16,7 @@ export enum ContactType {
 export const ContactSchema = z.discriminatedUnion("type", [
   z.object({
     id: z.uuid().optional(),
+    createdAt: z.number().optional(),
     type: z.literal(ContactType.EMAIL),
     value: z.email(),
     description: z.string().optional(),
@@ -24,6 +24,7 @@ export const ContactSchema = z.discriminatedUnion("type", [
 
   z.object({
     id: z.uuid().optional(),
+    createdAt: z.number().optional(),
     type: z.literal(ContactType.PHONE),
     value: z.e164(),
     description: z.string().optional(),
@@ -34,7 +35,7 @@ export type ContactFormData = z.infer<typeof ContactSchema>;
 
 interface ContactFormProps {
   onSuccess?: () => void;
-  defaultValues?: Partial<ContactFormData>; // сюда передаем контакт для редактирования
+  defaultValues?: Partial<ContactFormData>; // передаем контакт для редактирования
 }
 
 export default function ContactForm({
@@ -54,32 +55,42 @@ export default function ContactForm({
     defaultValues,
   });
 
-  // Если defaultValues пришли позже (например, при открытии модалки), обновляем форму
+  // Обновление формы, если defaultValues меняются
   useEffect(() => {
     if (defaultValues) reset(defaultValues);
   }, [defaultValues, reset]);
 
+  const type = watch("type");
+
   const onSubmit = (data: ContactFormData) => {
     const { contactList } = state;
 
-    if (defaultValues?.id) {
-      // редактируем существующий контакт
-      const existing = contactList.find((c) => c.id === defaultValues.id);
+    // если есть id → это редактирование
+    if (data.id) {
+      const existing = contactList.find((c) => c.id === data.id);
       if (!existing) return;
 
-      updateContact({ ...existing, ...data }); // сохраняем createdAt
+      updateContact({
+        ...existing,
+        ...data,
+        createdAt: existing.createdAt, // сохраняем дату создания
+      });
+
+      toast.success("Contact updated!");
     } else {
-      // создаем новый контакт, id будет создан внутри стора
-      addContact({ ...data, createdAt: Date.now() });
+      // создание нового
+      addContact({
+        ...data,
+        createdAt: Date.now(),
+      });
+
+      toast.success("Contact created!");
     }
 
-    toast.success(defaultValues?.id ? "Contact creat!" : "Contact update!");
     setTimeout(() => {
       onSuccess?.();
     }, 1500);
   };
-
-  const type = watch("type");
 
   return (
     <Container style={{ maxWidth: 500 }}>
@@ -137,6 +148,7 @@ export default function ContactForm({
           </Form.Control.Feedback>
         </Form.Group>
 
+        {/* Кнопка */}
         <Button variant="primary" type="submit" className="w-100">
           Save
         </Button>
