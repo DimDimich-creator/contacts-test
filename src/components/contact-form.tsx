@@ -7,6 +7,7 @@ import { Form, Button, Container, Alert } from "react-bootstrap";
 
 import { useContacts } from "@/components/contacts-store";
 import z from "zod";
+import { toast } from "sonner";
 
 export enum ContactType {
   PHONE = "phone",
@@ -35,7 +36,6 @@ export default function ContactForm({
   defaultValues,
 }: ContactFormProps) {
   const { addContact, updateContact, state } = useContacts();
-  const [showAlert, setShowAlert] = useState(false);
 
   const {
     register,
@@ -66,24 +66,16 @@ export default function ContactForm({
       addContact({ ...data, createdAt: Date.now() });
     }
 
-    setShowAlert(true);
-
+    toast.success(defaultValues?.id ? "Contact creat!" : "Contact update!" );
     setTimeout(() => {
-      setShowAlert(false);
-      reset();
       onSuccess?.();
     }, 1500);
+
   };
 
   return (
     <Container style={{ maxWidth: 500 }}>
       <h3>{defaultValues?.id ? "Редактировать контакт" : "Создать контакт"}</h3>
-
-      {showAlert && (
-        <Alert variant="success" className="mt-3">
-          Контакт {defaultValues?.id ? "обновлен" : "создан"}
-        </Alert>
-      )}
 
       <Form onSubmit={handleSubmit(onSubmit)} className="mt-3">
         {/* Тип */}

@@ -5,6 +5,7 @@ import { useState } from "react";
 import ContactsSplitView from "../contacts-split-view";
 import ContactModal from "../contact-modal";
 import { ContactsProvider } from "../contacts-store";
+import { Toaster } from "sonner";
 
 export default function ContactsLayout() {
   const [modalShow, setModalShow] = useState(false);
@@ -19,6 +20,7 @@ export default function ContactsLayout() {
         <ContactsSplitView />
 
         <ContactModal show={modalShow} onHide={() => setModalShow(false)} />
+        <Toaster position="top-center" richColors />
       </div>
     </ContactsProvider>
   );

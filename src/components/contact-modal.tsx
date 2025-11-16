@@ -16,7 +16,7 @@ export default function ContactModal(props: any) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ContactForm />
+        <ContactForm onSuccess={props.onHide} />
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
