@@ -15,7 +15,7 @@ export enum ContactType {
 
 export const ContactSchema = z.discriminatedUnion("type", [
   z.object({
-    id: z.uuid().optional(),
+    id: z.string().optional(),
     createdAt: z.number().optional(),
     type: z.literal(ContactType.EMAIL),
     value: z.email(),
@@ -23,7 +23,7 @@ export const ContactSchema = z.discriminatedUnion("type", [
   }),
 
   z.object({
-    id: z.uuid().optional(),
+    id: z.string().optional(),
     createdAt: z.number().optional(),
     type: z.literal(ContactType.PHONE),
     value: z.e164(),
