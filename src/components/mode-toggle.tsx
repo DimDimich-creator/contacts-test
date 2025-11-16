@@ -32,11 +32,11 @@ export function ModeToggleBootstrap() {
 
     if (document.startViewTransition) {
       document.startViewTransition(() => {
-        document.documentElement.setAttribute("data-theme", value);
+        document.documentElement.setAttribute("data-bs-theme", value);
         setTheme(value);
       });
     } else {
-      document.documentElement.setAttribute("data-theme", value);
+      document.documentElement.setAttribute("data-bs-theme", value);
       setTheme(value);
     }
   };
