@@ -17,7 +17,7 @@ export function ContactSort({ onSortChange }: ContactSortProps) {
   return (
     <div className="d-flex gap-2 mb-3 align-items-center w-100">
       <Form.Label className="mb-0 w-100">
-        <p className="visually-hidden">Сортировка по времени:</p>
+        <p className="visually-hidden">Sort of time:</p>
         <Form.Select
           value={order}
           onChange={(e) => setOrder(e.target.value as "asc" | "desc")}
