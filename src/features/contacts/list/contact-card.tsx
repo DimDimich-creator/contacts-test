@@ -16,7 +16,7 @@ interface ContactCardProps {
 }
 
 export function ContactCard({ contact }: ContactCardProps) {
-  const { id, type, value } = contact;
+  const { id, type, value, description } = contact;
   const avatar = createAvatar(lorelei, { seed: id });
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -55,11 +55,11 @@ export function ContactCard({ contact }: ContactCardProps) {
             {type === ContactType.PHONE ? <Phone /> : <Mail />}
             <div className="fw-semibold fs-6 fs-md-5 text-clamp-1">{value}</div>
           </div>
-          {/* {description && (
-            <p className="text-muted fs-7 fs-md-6 text-clamp-1 m-0">
+          {description && (
+            <p className="text-muted fs-7 fs-md-6 text-clamp-1 m-1 d-sm-none">
               {description}
             </p>
-          )} */}
+          )}
         </div>
 
         <div className="d-flex flex-column flex-md-row gap-2">
