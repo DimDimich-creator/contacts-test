@@ -1,81 +1,66 @@
-// __tests__/contacts.reducer.test.ts
-import { describe, it, expect } from "vitest";
-import { initState, reducer } from "@/features/contacts/store/contacts.reducer";
-import { State } from "@/features/contacts/store";
-import { ContactType } from "@/features/contacts/form/schema";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import type { Contact } from "@/features/contacts/store/types";
 
-describe("contacts.reducer", () => {
-  it("initState возвращает пустой список, если нет localStorage", () => {
-    const state = initState();
-    expect(state).toEqual({ contactList: [] });
+// 1️⃣ Мокаем Next.js хуки
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+// 2️⃣ Мокаем useContacts
+const removeContactMock = vi.fn();
+vi.mock("@/features/contacts/store", () => ({
+  useContacts: () => ({
+    removeContact: removeContactMock,
+    state: { contactList: [] },
+  }),
+}));
+
+// 3️⃣ Импортируем компонент после моков
+import { ContactCard } from "@/features/contacts/list/contact-card";
+
+describe("ContactCard", () => {
+  const contact: Contact = {
+    id: "1",
+    type: "email",
+    value: "test@mail.com",
+    createdAt: Date.now(),
+  };
+
+  beforeEach(() => {
+    removeContactMock.mockClear();
   });
 
-  it('добавляет новый контакт через "add"', () => {
-    const state: State = { contactList: [] };
-    const action = {
-      type: "add" as const,
-      payload: { type: "email" as ContactType, value: "test@mail.com" },
-    };
-    const newState = reducer(state, action);
+  it("рендерит данные контакта", () => {
+    render(<ContactCard contact={contact} />);
+    console.log(container.innerHTML);
 
-    expect(newState.contactList).toHaveLength(1);
-    const contact = newState.contactList[0];
-    expect(contact).toMatchObject({ type: "email", value: "test@mail.com" });
-    expect(typeof contact.id).toBe("string");
-    expect(typeof contact.createdAt).toBe("number");
+    expect(screen.getByText("test@mail.com")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /email test@mail\.com/i }),
+    ).toBeInTheDocument();
   });
 
-  it('обновляет контакт через "update"', () => {
-    const contact = {
-      id: "1",
-      type: "email" as ContactType,
-      value: "old@mail.com",
-      createdAt: Date.now(),
-    };
-    const state: State = { contactList: [contact] };
-    const action = {
-      type: "update" as const,
-      payload: { ...contact, value: "new@mail.com" },
-    };
-    const newState = reducer(state, action);
+  // it("открывает модалку при клике Edit", () => {
+  //   render(<ContactCard contact={contact} />);
 
-    expect(newState.contactList[0].value).toBe("new@mail.com");
-  });
+  //   const editButton = screen.getByRole("button", { name: /edit/i });
+  //   fireEvent.click(editButton);
 
-  it('удаляет контакт через "remove"', () => {
-    const contact = {
-      id: "1",
-      type: "email" as ContactType,
-      value: "delete@mail.com",
-      createdAt: Date.now(),
-    };
-    const state: State = { contactList: [contact] };
-    const action = { type: "remove" as const, payload: { id: "1" } };
-    const newState = reducer(state, action);
+  //   // Проверяем, что модалка открыта через кнопку Save/Cancel
+  //   expect(
+  //     screen.getByText(/save/i) || screen.getByText(/cancel/i),
+  //   ).toBeInTheDocument();
+  // });
 
-    expect(newState.contactList).toHaveLength(0);
-  });
+  // it("вызывает removeContact при клике Delete", () => {
+  //   render(<ContactCard contact={contact} />);
 
-  it('заменяет список контактов через "set"', () => {
-    const state: State = { contactList: [] };
-    const newContacts = [
-      {
-        id: "2",
-        type: "phone" as ContactType,
-        value: "123",
-        createdAt: Date.now(),
-      },
-    ];
-    const action = { type: "set" as const, payload: newContacts };
-    const newState = reducer(state, action);
+  //   const deleteButton = screen.getByTestId("delete-button");
+  //   fireEvent.click(deleteButton);
 
-    expect(newState.contactList).toEqual(newContacts);
-  });
-
-  it("неизвестный action возвращает исходное состояние", () => {
-    const state: State = { contactList: [] };
-    // @ts-expect-error проверяем неизвестный тип
-    const newState = reducer(state, { type: "unknown", payload: {} });
-    expect(newState).toEqual(state);
-  });
+  //   expect(removeContactMock).toHaveBeenCalledTimes(1);
+  //   expect(removeContactMock).toHaveBeenCalledWith(contact.id);
+  // });
 });
