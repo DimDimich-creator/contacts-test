@@ -7,11 +7,11 @@ export default function EmptyState() {
       as="li"
       // style={{ cursor: "pointer" }}
     >
-      <h4 className="fw-semibold mb-0">Нет контактов</h4>
+      <h4 className="fw-semibold mb-0">No contacts</h4>
 
       <p className="text-muted text-center">
-        Похоже, у вас еще нет контактов. Начните с добавления нового контакта,
-        чтобы управлять своей адресной книгой.
+        It looks like you don't have any contacts yet. Start by adding a new
+        contact to manage your address book.
       </p>
     </Card>
   );
