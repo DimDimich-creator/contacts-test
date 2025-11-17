@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ContactType } from "@/features/ contacts/form/schema";
+import type { ContactType } from "@/features/contacts/form/schema";
 import { useContacts } from "../store";
 import { ContactCard } from "./contact-card";
 import EmptyState from "./contact-card-empty";

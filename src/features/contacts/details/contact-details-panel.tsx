@@ -11,7 +11,7 @@ import { useContacts } from "../store";
 export function ContactDetailsPanel() {
   const { state, updateContact } = useContacts();
   const searchParams = useSearchParams();
-  const contactId = searchParams.get("contactId");
+  // const contactId = searchParams.get("contactId");
   const { contactList } = state;
 
   const contact = contactList.find((c) => c.id === contactId);

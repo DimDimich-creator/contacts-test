@@ -2,17 +2,17 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import ContactsLayout from "@/features/ contacts/components/contacts-layout";
+import ContactsLayout from "@/features/contacts/components/contacts-layout";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export default function Home() {
   return (
@@ -24,8 +24,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div
-        className={`${geistSans.variable} ${geistMono.variable} d-flex flex-column min-vh-100`}
+        // className={`${geistSans.variable} ${geistMono.variable} d-flex flex-column min-vh-100`}
       >
+        <h1>Home</h1>
         <Header />
         <ContactsLayout />
         <Footer />

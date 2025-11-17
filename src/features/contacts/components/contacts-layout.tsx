@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Toaster } from "sonner";
-import ContactModal from "@/features/ contacts/modal/contact-modal";
+import ContactModal from "@/features/contacts/modal/contact-modal";
 import { ContactsProvider } from "../store";
 import ContactsSplitView from "./contacts-split-view";
 
